@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ===== TODO: 修改页面标题与描述 ===== -->
+<title>Zhenda Hu — Personal Academic Homepage</title>
+<meta name="description" content="Personal academic homepage of Zhenda Hu — research on large language models, natural language processing, and financial time series forecasting.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E3A5F'/%3E%3Ccircle cx='32' cy='32' r='12' fill='none' stroke='%23B08A4E' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%23B08A4E'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap">
+
+<style>
+/* ============================================================
+   设计 tokens
+   ============================================================ */
+:root{
+  --paper:      #FBF9F4;
+  --paper-2:    #F2EDE2;
+  --ink:        #26333F;
+  --ink-soft:   #55636F;
+  --navy:       #1E3A5F;
+  --navy-deep:  #162C49;
+  --gold:       #B08A4E;
+  --gold-soft:  #D9C49A;
+  --line:       rgba(30,58,95,.16);
+  --line-soft:  rgba(30,58,95,.10);
+  --serif: 'Newsreader','Noto Serif SC',Georgia,'Times New Roman',serif;
+  --sans:  'Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+  --container: 1060px;
+  --radius: 10px;
+}
+
+/* ============ 基础 ============ */
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ transition:none !important; animation:none !important; }
+}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:400;
+  font-size:17px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--gold-soft); color:var(--navy-deep); }
+img{ max-width:100%; display:block; }
+a{ color:var(--navy); text-decoration:none; border-bottom:1px solid transparent; transition:border-color .18s ease, color .18s ease; }
+a:hover{ color:var(--gold); border-bottom-color:var(--gold); }
+h1,h2,h3{ font-family:var(--serif); font-weight:600; color:var(--navy-deep); line-height:1.25; margin:0; }
+p{ margin:0; }
+:focus-visible{ outline:2px solid var(--gold); outline-offset:3px; border-radius:2px; }
+
+.container{ max-width:var(--container); margin:0 auto; padding:0 28px; }
+
+/* ============ 顶部导航 ============ */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  background:rgba(251,249,244,.88);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.site-header.scrolled{ border-bottom-color:var(--line-soft); box-shadow:0 1px 12px rgba(22,44,73,.05); }
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; height:64px;
+}
+.nav-brand{
+  font-family:var(--serif); font-weight:600; font-size:19px; color:var(--navy-deep);
+  border:0; white-space:nowrap;
+}
+.nav-brand:hover{ color:var(--gold); }
+.nav-links{ display:flex; align-items:center; gap:26px; list-style:none; margin:0; padding:0; }
+.nav-links a{
+  position:relative; font-size:15px; color:var(--ink-soft); border:0; padding:4px 0;
+}
+.nav-links a::after{
+  content:""; position:absolute; left:0; bottom:-2px; height:2px; width:0;
+  background:var(--gold); transition:width .2s ease;
+}
+.nav-links a:hover, .nav-links a.active{ color:var(--navy); }
+.nav-links a:hover::after, .nav-links a.active::after{ width:100%; }
+
+/* ============ Hero ============ */
+.hero{ padding:88px 0 72px; }
+.hero-inner{
+  display:grid; grid-template-columns:184px 1fr; gap:44px; align-items:center;
+}
+.avatar{
+  width:184px; height:184px; border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(217,196,154,.55), rgba(217,196,154,0) 55%),
+    var(--navy);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--paper); font-family:var(--serif); font-weight:600; font-size:64px;
+  border:5px solid var(--gold-soft);
+  box-shadow:0 10px 30px rgba(22,44,73,.18);
+  user-select:none;
+}
+/* 有照片时取消注释并使用 assets/portrait.jpg
+.avatar{ background:none; border:0; box-shadow:none; }
+.avatar img{ width:184px; height:184px; border-radius:50%; object-fit:cover; border:5px solid var(--gold-soft); }
+*/
+.hero h1{ font-size:52px; font-weight:600; letter-spacing:-.5px; }
+.hero .role{
+  margin-top:10px; font-size:20px; color:var(--ink-soft);
+}
+.hero .affil{ margin-top:6px; font-size:16px; color:var(--ink-soft); }
+.hero .tagline{
+  margin-top:18px; max-width:620px; color:var(--ink);
+}
+.hero-links{ margin-top:22px; display:flex; flex-wrap:wrap; gap:14px; }
+.hero-links a{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:14.5px; color:var(--ink-soft); border:0; padding:5px 2px;
+}
+.hero-links a svg{ width:19px; height:19px; flex:none; }
+.hero-links a:hover{ color:var(--gold); }
+.hero-links a.email{
+  color:var(--paper); background:var(--navy);
+  padding:8px 18px; border-radius:999px;
+  border:1px solid var(--navy);
+}
+.hero-links a.email svg{ color:var(--gold-soft); }
+.hero-links a.email:hover{ background:var(--navy-deep); color:var(--paper); }
+
+/* ============ 章节通用 ============ */
+.section{ padding:72px 0; border-top:1px solid var(--line-soft); }
+.section-head{ margin-bottom:34px; }
+.section-head .kicker{
+  display:block; font-size:13.5px; letter-spacing:2px; color:var(--gold);
+  font-weight:600; margin-bottom:8px;
+}
+.section-head h2{ font-size:34px; }
+.section-head .sub{ margin-top:10px; color:var(--ink-soft); max-width:640px; font-size:15.5px; }
+
+/* ============ About ============ */
+.about-grid{ display:grid; grid-template-columns:1.6fr 1fr; gap:48px; align-items:start; }
+.about-bio p + p{ margin-top:14px; }
+.tags{ display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+.tag{
+  font-size:13.5px; color:var(--navy); background:rgba(30,58,95,.07);
+  border:1px solid var(--line-soft); border-radius:999px; padding:5px 14px;
+}
+.facts{ border-top:1px solid var(--line-soft); }
+.fact{ display:flex; gap:14px; padding:15px 0; border-bottom:1px solid var(--line-soft); }
+.fact svg{ width:20px; height:20px; flex:none; margin-top:4px; color:var(--gold); }
+.fact .k{ font-size:13px; color:var(--ink-soft); }
+.fact .v{ font-size:15.5px; margin-top:2px; }
+
+/* ============ Publications ============ */
+.pub-list{ display:flex; flex-direction:column; }
+.pub{
+  display:grid; grid-template-columns:76px 1fr; gap:22px;
+  padding:22px 0; border-bottom:1px solid var(--line-soft);
+}
+.pub-year{
+  font-family:var(--serif); font-style:italic; font-size:18px; color:var(--gold); padding-top:3px;
+}
+.pub-title{ font-family:var(--serif); font-size:20.5px; font-weight:600; color:var(--navy-deep); }
+.pub-title a{ color:inherit; border:0; }
+.pub-title a:hover{ color:var(--gold); }
+.pub-authors{ margin-top:6px; font-size:15px; color:var(--ink-soft); }
+.pub-authors .me{ color:var(--navy); font-weight:600; }
+.pub-venue{ margin-top:5px; font-size:14.5px; color:var(--ink-soft); font-style:italic; }
+.pub-meta{ margin-top:10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.pub-badge{
+  font-size:12px; font-weight:600; letter-spacing:.4px;
+  border-radius:5px; padding:3px 10px;
+}
+.badge-conf{ color:var(--navy); background:rgba(30,58,95,.10); }
+.badge-jrnl{ color:#7A5A1E; background:rgba(176,138,78,.18); }
+.pub-links{ display:inline-flex; flex-wrap:wrap; gap:6px; }
+.pub-links a{
+  font-size:13px; border:1px solid var(--line-soft); border-radius:5px;
+  padding:3px 10px; color:var(--ink-soft);
+}
+.pub-links a:hover{ border-color:var(--gold); color:var(--navy); }
+
+/* ============ Experience 时间轴 ============ */
+.timeline{ display:flex; flex-direction:column; }
+.tl-row{
+  display:grid; grid-template-columns:150px 40px 1fr;
+  gap:0 18px; padding-bottom:30px;
+}
+.tl-row:last-child{ padding-bottom:0; }
+.tl-time{
+  font-family:var(--serif); font-style:italic; font-size:16px; color:var(--gold);
+  padding-top:2px; text-align:right;
+}
+.tl-axis{ position:relative; justify-self:center; }
+.tl-axis::before{
+  content:""; position:absolute; top:10px; bottom:-30px; left:50%;
+  width:2px; transform:translateX(-50%);
+  background:var(--line);
+}
+.tl-row:last-child .tl-axis::before{ display:none; }
+.tl-dot{
+  position:relative; z-index:1; display:block; width:14px; height:14px; margin-top:6px;
+  border-radius:50%; background:var(--gold); border:3px solid var(--paper);
+  box-shadow:0 0 0 1.5px var(--gold);
+}
+.tl-content h3{ font-size:19px; }
+.tl-content .tl-org{ font-size:14.5px; color:var(--ink-soft); margin-top:3px; }
+.tl-content p{ margin-top:8px; font-size:15px; color:var(--ink-soft); max-width:620px; }
+
+/* ============ Contact ============ */
+.contact-inner{ text-align:center; padding:20px 0 8px; }
+.contact-inner .big{
+  display:inline-flex; align-items:center; gap:12px;
+  font-family:var(--serif); font-size:26px; color:var(--navy-deep);
+  border-bottom:2px solid var(--gold-soft); padding-bottom:4px;
+}
+.contact-inner .big svg{ width:26px; height:26px; color:var(--gold); }
+.contact-inner .big:hover{ color:var(--gold); border-bottom-color:var(--gold); }
+.contact-socials{ margin-top:26px; display:flex; justify-content:center; flex-wrap:wrap; gap:12px; }
+.contact-socials a{
+  display:inline-flex; align-items:center; gap:8px;
+  border:1px solid var(--line); border-radius:999px;
+  padding:9px 20px; font-size:14.5px; color:var(--ink-soft);
+}
+.contact-socials a svg{ width:17px; height:17px; color:var(--navy); }
+.contact-socials a:hover{ border-color:var(--gold); color:var(--navy); }
+.contact-note{ margin-top:26px; font-size:14px; color:var(--ink-soft); }
+
+/* ============ 页脚 ============ */
+.site-footer{
+  border-top:1px solid var(--line-soft); margin-top:64px; padding:30px 0 44px;
+}
+.footer-inner{
+  display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+  font-size:13.5px; color:var(--ink-soft);
+}
+.footer-inner a{ color:var(--ink-soft); border:0; }
+.footer-inner a:hover{ color:var(--gold); }
+
+/* ============ 响应式 ============ */
+@media (max-width: 900px){
+  .hero-inner{ grid-template-columns:1fr; text-align:center; }
+  .avatar{ margin:0 auto; }
+  .hero .tagline{ margin-left:auto; margin-right:auto; }
+  .hero-links{ justify-content:center; }
+  .about-grid{ grid-template-columns:1fr; gap:40px; }
+  .tl-row{ grid-template-columns:1fr; gap:6px 0; }
+  .tl-time{ text-align:left; }
+  .tl-axis{ display:none; }
+  .tl-content{ padding-left:2px; }
+}
+@media (max-width: 640px){
+  body{ font-size:16px; }
+  .container{ padding:0 20px; }
+  .hero{ padding:60px 0 52px; }
+  .hero h1{ font-size:38px; }
+  .nav{ height:58px; }
+  .nav-links{ gap:16px; }
+  .nav-links a{ font-size:14px; }
+  .section{ padding:56px 0; }
+  .section-head h2{ font-size:28px; }
+  .pub{ grid-template-columns:1fr; gap:6px; }
+  .pub-year{ padding-top:0; }
+  .contact-inner .big{ font-size:20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 导航 ============ -->
+<header class="site-header" id="site-header">
+  <div class="container nav">
+    <a class="nav-brand" href="#top">Zhenda Hu</a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ Hero ============ -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="avatar" aria-hidden="true">ZH</div>
+      <!-- 有照片时：把上面 div 换成下面这行（并把 assets/portrait.jpg 放进去）
+      <img class="avatar" src="assets/portrait.jpg" alt="Portrait of Your Name">
+      -->
+      <div>
+        <h1>Zhenda Hu</h1>
+        <p class="role">Ph.D. in Computer Science</p>
+        <p class="affil">Shanghai University of Finance and Economics (SUFE) · Joint PhD with Singapore Management University (SMU)</p>
+        <p class="tagline">
+          My research lies at the intersection of large language models(LLMs), natural language processing(NLP), deep learning, affect computing, and financial time
+          series forecasting. My recent projects focus on financial large language models, intelligent
+          dialogue and intent recognition, and financial time series forecasting.
+        </p>
+        <div class="hero-links">
+          <!-- ===== TODO: 把下方三个主页链接替换为你的 Google Scholar / GitHub / ORCID 主页地址 ===== -->
+          <a class="email" href="mailto:huzhenda2020@gmail.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            Email me
+          </a>
+          <a href="https://scholar.google.com/scholar?hl=zh-CN&amp;as_sdt=0%2C5&amp;q=Zhenda+Hu&amp;btnG=" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9.5 8h7"/><path d="M9.5 12h5"/></svg>
+            Google Scholar
+          </a>
+          <a href="https://github.com/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+            GitHub
+          </a>
+          <a href="https://orcid.org/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 8.5v7"/><circle cx="13.5" cy="10.5" r="1.6"/><path d="M13.5 10.5v5"/></svg>
+            ORCID
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ About ============ -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">About</span>
+        <h2>Research profile</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-bio">
+          <p>
+            I received my Ph.D. in Computer Science from Shanghai University of Finance
+            and Economics in 2023, through a joint program with Singapore Management University
+            (SMU), under the supervision of Prof. Yinglin Wang, and Prof. Zhaoxia Wang
+            during the joint-training period at Singapore Management University.
+            Prior to that, I received my B.S. in Information Management and Information Systems from
+            Southwestern University of Finance and Economics in 2017.
+          </p>
+          <p>
+            My research interests cover large language models, natural language processing, deep learning,
+            affect computing, and financial time series forecasting. My recent projects focus on
+            financial large language models, intelligent dialogue and intent recognition, and financial
+            time series forecasting. I have published 10+ papers in SCI-indexed journals and
+            CCF international conferences, including Expert Systems with Applications, Neural Computing
+            and Applications, and IJCNN.
+          </p>
+          <div class="tags">
+            <span class="tag">Large Language Models</span>
+            <span class="tag">Natural Language Processing</span>
+            <span class="tag">Deep Learning</span>
+            <span class="tag">Text Sentiment Computing</span>
+            <span class="tag">Financial Time Series Forecasting</span>
+            <span class="tag">Intelligent Dialogue &amp; Intent Recognition</span>
+          </div>
+        </div>
+        <aside class="facts">
+          <div class="fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            <div><div class="k">Status</div><div class="v">Open to collaboration and research opportunities</div></div>
+          </div>
+          <div class="fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><div class="k">Location</div><div class="v">Shanghai, China</div></div>
+          </div>
+          <div class="fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <div><div class="k">Advisor</div><div class="v">Prof. Yinglin Wang &amp; Prof. Zhaoxia Wang</div></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Publications ============ -->
+  <section class="section" id="publications">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Publications</span>
+        <h2>Publications</h2>
+        <p class="sub">
+          I have published 10+ papers in SCI-indexed journals and CCF international
+          conferences, listed in reverse chronological order below. * denotes corresponding author.
+        </p>
+      </div>
+
+      <div class="pub-list">
+        <article class="pub">
+          <div class="pub-year">2026</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://doi.org/10.1016/j.eswa.2025.129587" target="_blank" rel="noopener">HAEA: A Heterogeneous Alternating Evolutionary Algorithm for Numerical Optimization</a></h3>
+            <p class="pub-authors">Taiyong Li<sup>*</sup>, Tianhao Yi, <span class="me">Zhenda Hu</span>, Wu Deng, Donglin Zhu, Zhilong Xie, Jiang Wu</p>
+            <p class="pub-venue">Expert Systems with Applications, 298, 129587</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-jrnl">Journal</span>
+              <span class="pub-links"><a href="https://doi.org/10.1016/j.eswa.2025.129587" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2025</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://doi.org/10.1007/978-981-96-8197-6_30" target="_blank" rel="noopener">Stock Price Prediction Using Graph Attention Networks with Sentiment Analysis</a></h3>
+            <p class="pub-authors"><span class="me">Zhenda Hu</span>, Guanru Yan, Yee Sen Tan, Haibo Pen</p>
+            <p class="pub-venue">PAKDD 2025 Workshops, pp. 399–408</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-conf">Conference</span>
+              <span class="pub-links"><a href="https://doi.org/10.1007/978-981-96-8197-6_30" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2024</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://ink.library.smu.edu.sg/sis_research/10165/" target="_blank" rel="noopener">Performance Analysis of Llama 2 Among Other LLMs</a></h3>
+            <p class="pub-authors">Donghao Huang, <span class="me">Zhenda Hu</span>, Zhaoxia Wang<sup>*</sup></p>
+            <p class="pub-venue">2024 IEEE Conference on Artificial Intelligence (CAI)</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-conf">Conference</span>
+              <span class="pub-links"><a href="https://ink.library.smu.edu.sg/sis_research/10165/" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2023</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://link.springer.com/article/10.1007/s00521-023-08576-z" target="_blank" rel="noopener">MiMuSA—Mimicking Human Language Understanding for Fine-Grained Multi-Class Sentiment Analysis</a></h3>
+            <p class="pub-authors">Zhaoxia Wang<sup>*</sup>, <span class="me">Zhenda Hu</span>, Seng-Beng Ho, Erik Cambria, Ah-Hwee Tan</p>
+            <p class="pub-venue">Neural Computing and Applications, 35, 15907–15921</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-jrnl">Journal</span>
+              <span class="pub-links"><a href="https://link.springer.com/article/10.1007/s00521-023-08576-z" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2023</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://ink.library.smu.edu.sg/sis_research/7805/" target="_blank" rel="noopener">Learning-Based Stock Trending Prediction by Incorporating Technical Indicators and Social Media Sentiment</a></h3>
+            <p class="pub-authors">Zhaoxia Wang, <span class="me">Zhenda Hu</span>, Fang Li, Seng-Beng Ho, Erik Cambria</p>
+            <p class="pub-venue">Cognitive Computation, 15(3), 1092–1102</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-jrnl">Journal</span>
+              <span class="pub-links"><a href="https://ink.library.smu.edu.sg/sis_research/7805/" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2023</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://doi.org/10.1016/j.eswa.2022.119492" target="_blank" rel="noopener">MSRL-Net: A Multi-level Semantic Relation-Enhanced Learning Network for Aspect-Based Sentiment Analysis</a></h3>
+            <p class="pub-authors"><span class="me">Zhenda Hu</span>, Zhaoxia Wang, Yinglin Wang, Ah-Hwee Tan</p>
+            <p class="pub-venue">Expert Systems with Applications, 217, 119492</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-jrnl">Journal</span>
+              <span class="pub-links"><a href="https://doi.org/10.1016/j.eswa.2022.119492" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2023</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://doi.org/10.1007/s12559-022-10074-x" target="_blank" rel="noopener">Aspect Sentiment Triplet Extraction Incorporating Syntactic Constituency Parsing Tree and Commonsense Knowledge Graph</a></h3>
+            <p class="pub-authors"><span class="me">Zhenda Hu</span>, Zhaoxia Wang, Yinglin Wang, Ah-Hwee Tan</p>
+            <p class="pub-venue">Cognitive Computation, 15(1), 337–347</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-jrnl">Journal</span>
+              <span class="pub-links"><a href="https://doi.org/10.1007/s12559-022-10074-x" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2022</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://dl.acm.org/doi/10.1016/j.asoc.2022.108731" target="_blank" rel="noopener">Pyramid Particle Swarm Optimization with Novel Strategies of Competition and Cooperation</a></h3>
+            <p class="pub-authors">Taiyong Li<sup>*</sup>, Jiayi Shi, Wu Deng, <span class="me">Zhenda Hu</span></p>
+            <p class="pub-venue">Applied Soft Computing, 121, 108731</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-jrnl">Journal</span>
+              <span class="pub-links"><a href="https://dl.acm.org/doi/10.1016/j.asoc.2022.108731" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2021</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://www.semanticscholar.org/paper/Utilizing-External-Knowledge-with-Multi-granularity-Hu-Wang/34a9424c40fc99d9949caaaa05d5fa40a11a42ae" target="_blank" rel="noopener">Utilizing External Knowledge with Multi-granularity Attention for Review Reading Comprehension</a></h3>
+            <p class="pub-authors"><span class="me">Zhenda Hu</span>, Yinglin Wang<sup>*</sup></p>
+            <p class="pub-venue">IEEE ICTAI 2021, pp. 1231–1236</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-conf">Conference</span>
+              <span class="pub-links"><a href="https://www.semanticscholar.org/paper/Utilizing-External-Knowledge-with-Multi-granularity-Hu-Wang/34a9424c40fc99d9949caaaa05d5fa40a11a42ae" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2021</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://ink.library.smu.edu.sg/context/sis_research/article/7885/viewcontent/ICTAI_Stock_Market_Trend_Forecasting_Based_on_MultipleTextual_Features_A_Deep_Learning_Method_Final_Version.pdf" target="_blank" rel="noopener">Stock Market Trend Forecasting Based on Multiple Textual Features: A Deep Learning Method</a></h3>
+            <p class="pub-authors"><span class="me">Zhenda Hu</span>, Zhaoxia Wang, Seng-Beng Ho, Ah-Hwee Tan</p>
+            <p class="pub-venue">IEEE ICTAI 2021, pp. 1002–1007</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-conf">Conference</span>
+              <span class="pub-links"><a href="https://ink.library.smu.edu.sg/context/sis_research/article/7885/viewcontent/ICTAI_Stock_Market_Trend_Forecasting_Based_on_MultipleTextual_Features_A_Deep_Learning_Method_Final_Version.pdf" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2021</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://link.springer.com/chapter/10.1007/978-3-030-78609-0_47" target="_blank" rel="noopener">Mining Consumer Brand Relationship from Social Media Data: A Natural Language Processing Approach</a></h3>
+            <p class="pub-authors">Di Shang, <span class="me">Zhenda Hu</span>, Zhaoxia Wang</p>
+            <p class="pub-venue">ICAIS 2021, LNCS 12736, pp. 553–565</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-conf">Conference</span>
+              <span class="pub-links"><a href="https://link.springer.com/chapter/10.1007/978-3-030-78609-0_47" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2021</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://ogst.ifpenergiesnouvelles.fr/articles/ogst/abs/2021/01/ogst200291/ogst200291.html" target="_blank" rel="noopener">Crude Oil Price Prediction Using CEEMDAN and LSTM-Attention with News Sentiment Index</a></h3>
+            <p class="pub-authors"><span class="me">Zhenda Hu</span><sup>*</sup></p>
+            <p class="pub-venue">Oil &amp; Gas Science and Technology – Rev. IFP Energies nouvelles, 76, 28</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-jrnl">Journal</span>
+              <span class="pub-links"><a href="https://ogst.ifpenergiesnouvelles.fr/articles/ogst/abs/2021/01/ogst200291/ogst200291.html" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="pub">
+          <div class="pub-year">2018</div>
+          <div class="pub-main">
+            <h3 class="pub-title"><a href="https://www.mdpi.com/1996-1073/11/7/1882" target="_blank" rel="noopener">Forecasting Crude Oil Prices Using Ensemble Empirical Mode Decomposition and Sparse Bayesian Learning</a></h3>
+            <p class="pub-authors">Taiyong Li, <span class="me">Zhenda Hu</span>, Yanchi Jia, Jiang Wu, Yingrui Zhou</p>
+            <p class="pub-venue">Energies, 11(7), 1882 (MDPI)</p>
+            <div class="pub-meta">
+              <span class="pub-badge badge-jrnl">Journal</span>
+              <span class="pub-links"><a href="https://www.mdpi.com/1996-1073/11/7/1882" target="_blank" rel="noopener">Source</a></span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Experience ============ -->
+  <section class="section" id="experience">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Experience</span>
+        <h2>Education</h2>
+      </div>
+      <div class="timeline">
+        <div class="tl-row">
+          <div class="tl-time">2017.09 — 2023.01</div>
+          <div class="tl-axis"><span class="tl-dot"></span></div>
+          <div class="tl-content">
+            <h3>Ph.D. in Financial Information Engineering</h3>
+            <p class="tl-org">Shanghai University of Finance and Economics</p>
+            <p>Advised by Prof. Yinglin Wang. Research on LLMs, natural language processing, deep learning, and financial time series forecasting.</p>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-time">2021.06 — 2022.06</div>
+          <div class="tl-axis"><span class="tl-dot"></span></div>
+          <div class="tl-content">
+            <h3>Computer Science (Joint Training)</h3>
+            <p class="tl-org">Singapore Management University</p>
+            <p>Supervised by Prof. Zhaoxia Wang and Prof. Ah-Hwee Tan. Joint-training period of the doctoral program, with research on LLMs, NLP and its financial applications.</p>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-time">2013.09 — 2017.06</div>
+          <div class="tl-axis"><span class="tl-dot"></span></div>
+          <div class="tl-content">
+            <h3>B.S. in Information Management and Information Systems</h3>
+            <p class="tl-org">Southwestern University of Finance and Economics</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Contact ============ -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Contact</span>
+        <h2>Get in touch</h2>
+      </div>
+      <div class="contact-inner">
+        <a class="big" href="mailto:huzhenda2020@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+          huzhenda2020@gmail.com
+        </a>
+        <!-- ===== TODO: 把下方三个主页链接替换为你的 Google Scholar / GitHub / ORCID 主页地址 ===== -->
+        <div class="contact-socials">
+          <a href="https://scholar.google.com/scholar?hl=zh-CN&amp;as_sdt=0%2C5&amp;q=Zhenda+Hu&amp;btnG=" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9.5 8h7"/><path d="M9.5 12h5"/></svg>
+            Google Scholar
+          </a>
+          <a href="https://github.com/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+            GitHub
+          </a>
+          <a href="https://orcid.org/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 8.5v7"/><circle cx="13.5" cy="10.5" r="1.6"/><path d="M13.5 10.5v5"/></svg>
+            ORCID
+          </a>
+        </div>
+        <p class="contact-note">
+          I am always happy to chat about research, collaboration, or reviewing opportunities.
+          <!-- ===== 如需留下可预约时间说明，可在此补充 ===== -->
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ 页脚 ============ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>© <span id="year">2026</span> Zhenda Hu. Built with plain HTML &amp; CSS.</span>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* 页脚年份 */
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* 头部滚动状态 */
+  var header = document.getElementById('site-header');
+  function onScroll(){
+    header.classList.toggle('scrolled', window.scrollY > 8);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* 滚动监听：高亮当前章节 */
+  var sections = document.querySelectorAll('main section[id]');
+  var navLinks = document.querySelectorAll('.nav-links a');
+  var ticking = false;
+
+  function spy(){
+    var pos = window.scrollY + 90;
+    var current = 'about';
+    sections.forEach(function(s){
+      if(s.offsetTop <= pos){ current = s.id; }
+    });
+    navLinks.forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){
+      window.requestAnimationFrame(spy);
+      ticking = true;
+    }
+  }, {passive:true});
+  spy();
+})();
+</script>
+</body>
+</html>
